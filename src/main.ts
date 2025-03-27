@@ -1,5 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
+
+const logger = new Logger('NestApplication');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +17,6 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap().catch((error) => {
-  console.error('Falha ao iniciar à aplicação:', error);
+  logger.error('Falha ao iniciar à aplicação:', error);
   process.exit(1);
 });
