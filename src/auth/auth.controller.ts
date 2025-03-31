@@ -7,7 +7,7 @@ import { ValidationPipe } from 'src/pipes/validation.pipe';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('login')
   async handle(@Body(new ValidationPipe()) payload: LoginDto) {
     return this.authService.execute(payload);
   }
