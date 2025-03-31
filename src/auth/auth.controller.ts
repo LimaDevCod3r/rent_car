@@ -8,7 +8,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async handle(@Body(new ValidationPipe()) payload: LoginDto) {
+  async handle(@Body() payload: LoginDto) {
     return this.authService.execute(payload);
   }
 }

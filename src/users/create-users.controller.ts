@@ -9,7 +9,7 @@ export class CreateUsersController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async handle(@Body(new ValidationPipe()) payload: CreateUserDto) {
+  async handle(@Body() payload: CreateUserDto) {
     const user = await this.usersService.execute(payload);
 
     return {

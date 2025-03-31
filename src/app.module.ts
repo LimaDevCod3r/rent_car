@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { CarsModule } from './cars/cars.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -18,11 +19,15 @@ import * as Joi from 'joi';
         JWT_EXPIRATION: Joi.string().default('1d').required(),
         PORT: Joi.number().default(3000),
         DATABASE_URL: Joi.string().required(),
+        CLOUDINARY_CLOUD_NAME: Joi.string().required(),
+        CLOUDINARY_API_KEY: Joi.string().required(),
+        CLOUDINARY_API_SECRET: Joi.string().required(),
       }),
       validationOptions: {
         abortEarly: true,
       },
     }),
+    CarsModule,
   ],
   controllers: [],
   providers: [],
