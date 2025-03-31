@@ -1,11 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 const logger = new Logger('NestApplication');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // obter o serviço de configuração
+  const configService = app.get(ConfigService);
+
+  const port = configService.get<number>('PORT');
 
   app.enableCors({
     origin: 'http://localhost:5173',
@@ -14,7 +20,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(port ?? 3000);
 }
 bootstrap().catch((error) => {
   logger.error('Falha ao iniciar à aplicação:', error);
