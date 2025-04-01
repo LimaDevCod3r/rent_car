@@ -34,11 +34,19 @@ export class CarsRepository {
   }
 
   async update(id: string, data: UpdateCarDto) {
-    return this.prisma.car.update({
+    return await this.prisma.car.update({
       where: {
         id,
       },
       data,
+    });
+  }
+
+  async remove(id: string) {
+    return this.prisma.car.delete({
+      where: {
+        id,
+      },
     });
   }
 }

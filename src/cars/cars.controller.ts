@@ -66,13 +66,21 @@ export class CarsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.carsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    const car = await this.carsService.findOne(id);
+    return {
+      message: 'Carro encontrado com sucesso',
+      data: {
+        car,
+      },
+    };
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
-    const cars = this.carsService.update(id, updateCarDto);
+  @UseGuards(JwtAuthGuard)
+  async update(@Param('id') id: string, @Body() updateCarDto: UpdateCarDto) {
+    const cars = await this.carsService.update(id, updateCarDto);
+
     return {
       message: 'Carro atualizado com sucesso',
       data: {
@@ -82,7 +90,11 @@ export class CarsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.carsService.remove(+id);
+  @UseGuards(JwtAuthGuard)
+  async remove(@Param('id') id: string) {
+    const car = await this.carsService.remove(id);
+    return {
+      message: 'Carro removido com sucesso',
+    };
   }
 }

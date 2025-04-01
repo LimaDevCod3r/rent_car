@@ -25,12 +25,12 @@ export class CarsService {
     return this.carsRepository.create(createCarDto, userId);
   }
 
-  findAll() {
-    return this.carsRepository.findAll();
+  async findAll() {
+    return await this.carsRepository.findAll();
   }
 
-  findOne(id: string) {
-    return this.carsRepository.findOne(id);
+  async findOne(id: string) {
+    return await this.carsRepository.findOne(id);
   }
 
   async update(id: string, updateCarDto: UpdateCarDto) {
@@ -41,7 +41,13 @@ export class CarsService {
     return await this.carsRepository.update(cars.id, updateCarDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} car`;
+  async remove(id: string) {
+    const cars = await this.carsRepository.findOne(id);
+
+    if (!cars) {
+      throw new NotFoundException('Carro não encontrado');
+    }
+
+    return await this.carsRepository.remove(cars.id);
   }
 }
