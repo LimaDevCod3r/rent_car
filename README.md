@@ -2,98 +2,226 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# API de Aluguel de Carros
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Descrição
 
-## Description
+Esta é uma API RESTful para um sistema de aluguel de carros desenvolvida com o framework NestJS. A API permite o gerenciamento de usuários, carros e aluguéis, com autenticação JWT e upload de imagens para os carros.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologias Utilizadas
 
-## Project setup
+- NestJS
+- TypeScript
+- Prisma ORM
+- PostgreSQL
+- JWT para autenticação
+- Cloudinary para armazenamento de imagens
+- Validação de dados com class-validator
+
+## Configuração do Projeto
+
+### Pré-requisitos
+
+- Node.js
+- pnpm
+- PostgreSQL
+
+### Instalação
 
 ```bash
 $ pnpm install
 ```
 
-## Compile and run the project
+### Configuração do Ambiente
+
+Crie um arquivo `.env` baseado no arquivo `env.exemple` e configure as variáveis de ambiente necessárias:
+
+```
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/rent_car"
+JWT_SECRET="sua_chave_secreta"
+PORT=3000
+CLOUDINARY_CLOUD_NAME="seu_cloud_name"
+CLOUDINARY_API_KEY="sua_api_key"
+CLOUDINARY_API_SECRET="seu_api_secret"
+```
+
+### Executando as Migrações
 
 ```bash
-# development
+$ npx prisma migrate dev
+```
+
+## Executando o Projeto
+
+```bash
+# desenvolvimento
 $ pnpm run start
 
-# watch mode
+# modo de observação
 $ pnpm run start:dev
 
-# production mode
+# modo de produção
 $ pnpm run start:prod
 ```
 
-## Run tests
+## Endpoints da API
+
+### Autenticação
+
+#### Registro de Usuário
+
+```
+POST /auth/register
+```
+
+Corpo da requisição:
+```json
+{
+  "name": "Nome do Usuário",
+  "email": "usuario@email.com",
+  "password": "senha123"
+}
+```
+
+#### Login
+
+```
+POST /auth/login
+```
+
+Corpo da requisição:
+```json
+{
+  "email": "usuario@email.com",
+  "password": "senha123"
+}
+```
+
+Resposta:
+```json
+{
+  "access_token": "jwt_token"
+}
+```
+
+### Carros
+
+#### Listar Todos os Carros
+
+```
+GET /cars
+```
+
+#### Obter Carro por ID
+
+```
+GET /cars/:id
+```
+
+#### Criar Novo Carro (Requer Autenticação)
+
+```
+POST /cars
+```
+
+Corpo da requisição (multipart/form-data):
+```
+name: "Nome do Carro"
+model: "Modelo do Carro"
+price: 100
+year: 2023
+image: [arquivo de imagem]
+```
+
+#### Atualizar Carro (Requer Autenticação)
+
+```
+PATCH /cars/:id
+```
+
+#### Excluir Carro (Requer Autenticação)
+
+```
+DELETE /cars/:id
+```
+
+### Aluguéis
+
+#### Listar Todos os Aluguéis (Requer Autenticação)
+
+```
+GET /rents
+```
+
+#### Criar Novo Aluguel (Requer Autenticação)
+
+```
+POST /rents
+```
+
+Corpo da requisição:
+```json
+{
+  "carId": "id_do_carro",
+  "startAt": "2023-07-01T00:00:00.000Z"
+}
+```
+
+## Estrutura do Banco de Dados
+
+A API utiliza três modelos principais:
+
+### Usuários (User)
+- id: UUID
+- email: String (único)
+- name: String
+- password: String (hash)
+- role: Enum (USER, ADMIN)
+- createdAt: DateTime
+- updatedAt: DateTime
+
+### Carros (Car)
+- id: UUID
+- name: String
+- model: String
+- image: String (opcional)
+- price: Integer
+- year: Integer
+- available: Boolean
+- userId: String (referência ao dono do carro)
+- createdAt: DateTime
+- updatedAt: DateTime
+
+### Aluguéis (Rent)
+- id: UUID
+- carId: String (referência ao carro)
+- userId: String (referência ao usuário)
+- startAt: DateTime (data de início do aluguel)
+- endAt: DateTime (data de devolução, opcional)
+- createdAt: DateTime
+- updatedAt: DateTime
+
+## Executando Testes
 
 ```bash
-# unit tests
+# testes unitários
 $ pnpm run test
 
-# e2e tests
+# testes e2e
 $ pnpm run test:e2e
 
-# test coverage
+# cobertura de testes
 $ pnpm run test:cov
 ```
 
-## Deployment
+## Segurança
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+A API utiliza autenticação JWT para proteger rotas sensíveis. Todas as senhas são armazenadas com hash usando bcryptjs.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## CORS
 
-```bash
-$ pnpm install -g mau
-$ mau deploy
-```
+A API está configurada para aceitar requisições do frontend em `http://localhost:5173`.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Licença
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Este projeto está licenciado sob a licença MIT.
