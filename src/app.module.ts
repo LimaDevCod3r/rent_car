@@ -3,6 +3,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CarsModule } from './cars/cars.module';
+import { RentsModule } from './rents/rents.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -28,6 +29,7 @@ import * as Joi from 'joi';
       },
     }),
     CarsModule,
+    RentsModule,
   ],
   controllers: [],
   providers: [],
